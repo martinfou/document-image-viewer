@@ -125,6 +125,23 @@ public class DocumentServlet extends HttpServlet {
                     req.setAttribute("viewerDoc", viewerDoc.get());
                     req.setAttribute("viewerDocs", getDocuments());
                     req.setAttribute("viewerIndex", getDocumentIndex(viewerId));
+                    // Zoom via URL param (no JS needed for basic zoom)
+                    String zoomParam = req.getParameter("zoom");
+                    String zoomMode = "fixed";
+                    int zoomLevel = 100;
+                    if (zoomParam != null && !zoomParam.isEmpty()) {
+                        switch (zoomParam) {
+                            case "fitW" -> zoomMode = "fitWidth";
+                            case "fitH" -> zoomMode = "fitHeight";
+                            default -> {
+                                try {
+                                    zoomLevel = Math.max(10, Math.min(300, Integer.parseInt(zoomParam)));
+                                } catch (NumberFormatException ignored) {}
+                            }
+                        }
+                    }
+                    req.setAttribute("viewerZoom", zoomLevel);
+                    req.setAttribute("viewerZoomMode", zoomMode);
                     req.getRequestDispatcher("/viewer.jsp").forward(req, resp);
                     return;
                 }

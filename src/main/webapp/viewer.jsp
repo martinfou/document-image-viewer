@@ -85,6 +85,11 @@
         .nav-overlay i { font-size: 32px; color: #fff; opacity: 0.7; }
         .nav-overlay:hover i { opacity: 1; }
         
+        /* ── Fit modes (no JS) ── */
+        .fit-width { max-width:100% !important; width:100% !important; height:auto !important; object-fit:fill !important; }
+        .fit-height { max-height:85vh !important; height:85vh !important; width:auto !important; object-fit:fill !important; }
+        .fit-width, .fit-height { transform:none !important; }
+        
         /* ── Info bar ── */
         .info-bar {
             display: flex; align-items: center; justify-content: center; gap: 16px;
@@ -124,15 +129,25 @@
     
     <div class="toolbar-divider"></div>
     
-    <!-- Previous / Next -->
+    <!-- Previous / Next (URL-based, works without JS) -->
     <div class="toolbar-group">
-        <button class="tb-btn" onclick="navDoc(-1)" title="Previous (←)" id="btnPrev" ${viewerIndex <= 0 ? 'disabled style="opacity:0.3"' : ''}>
-            <i class="bi bi-chevron-left"></i>
-        </button>
-        <span class="tb-label" id="docCounter">${viewerIndex + 1} / ${fn:length(viewerDocs)}</span>
-        <button class="tb-btn" onclick="navDoc(1)" title="Next (→)" id="btnNext" ${viewerIndex >= fn:length(viewerDocs) - 1 ? 'disabled style="opacity:0.3"' : ''}>
-            <i class="bi bi-chevron-right"></i>
-        </button>
+        <c:if test="${viewerIndex > 0}">
+            <a href="${pageContext.request.contextPath}/viewer/${viewerDocs[viewerIndex - 1].id}?zoom=${viewerZoom}" class="tb-btn" title="Previous (←)">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+        </c:if>
+        <c:if test="${viewerIndex <= 0}">
+            <span class="tb-btn" style="opacity:0.3;cursor:default"><i class="bi bi-chevron-left"></i></span>
+        </c:if>
+        <span class="tb-label">${viewerIndex + 1} / ${fn:length(viewerDocs)}</span>
+        <c:if test="${viewerIndex < fn:length(viewerDocs) - 1}">
+            <a href="${pageContext.request.contextPath}/viewer/${viewerDocs[viewerIndex + 1].id}?zoom=${viewerZoom}" class="tb-btn" title="Next (→)">
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </c:if>
+        <c:if test="${viewerIndex >= fn:length(viewerDocs) - 1}">
+            <span class="tb-btn" style="opacity:0.3;cursor:default"><i class="bi bi-chevron-right"></i></span>
+        </c:if>
     </div>
     
     <div class="toolbar-divider"></div>
@@ -142,22 +157,21 @@
     
     <div class="toolbar-divider"></div>
     
-    <!-- Zoom -->
+    <!-- Zoom (JS slider + URL-based fallback) -->
     <div class="toolbar-group">
-        <button class="tb-btn" onclick="zoomOut()" title="Zoom Out (−)">−</button>
-        <input type="range" class="zoom-slider" id="zoomSlider" min="10" max="300" value="100" oninput="zoomTo(this.value)">
-        <span class="tb-label" id="zoomLabel">100%</span>
-        <button class="tb-btn" onclick="zoomIn()" title="Zoom In (+)">+</button>
-        <button class="tb-btn" onclick="zoomReset()" title="Reset (Ctrl+0)">⟲</button>
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDoc.id}?zoom=${Math.max(10, viewerZoom - 25)}" class="tb-btn" title="Zoom Out (−)">−</a>
+        <input type="range" class="zoom-slider" id="zoomSlider" min="10" max="300" value="${viewerZoom}" oninput="zoomTo(this.value)">
+        <span class="tb-label" id="zoomLabel">${viewerZoom}%</span>
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDoc.id}?zoom=${Math.min(300, viewerZoom + 25)}" class="tb-btn" title="Zoom In (+)">+</a>
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDoc.id}?zoom=100" class="tb-btn" title="Reset (Ctrl+0)">⟲</a>
     </div>
     
     <div class="toolbar-divider"></div>
     
     <!-- Fit / Rotate -->
     <div class="toolbar-group">
-        <button class="tb-btn" onclick="fitWidth()" title="Fit to Width (F)">⬉</button>
-        <button class="tb-btn" onclick="fitHeight()" title="Fit to Height (H)">⬈</button>
-        <button class="tb-btn" onclick="fitPage()" title="Fit to Page">⊞</button>
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDoc.id}?zoom=fitW" class="tb-btn" title="Fit to Width (F)">⬉</a>
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDoc.id}?zoom=fitH" class="tb-btn" title="Fit to Height (H)">⬈</a>
         <button class="tb-btn" onclick="rotateDoc()" title="Rotate 90° (R)">⟳</button>
     </div>
     
@@ -166,7 +180,7 @@
     <!-- Actions -->
     <div class="toolbar-group">
         <button class="tb-btn" onclick="toggleFullscreen()" title="Fullscreen (F11)">⛶</button>
-        <button class="tb-btn" onclick="downloadDoc()" title="Download">⬇</button>
+        <a href="${pageContext.request.contextPath}/api/documents/${viewerDoc.id}/content" class="tb-btn" title="Download" download>⬇</a>
     </div>
 </div>
 
@@ -189,19 +203,24 @@
             <c:otherwise>
                 <img id="docImage" src="${pageContext.request.contextPath}/api/documents/${viewerDoc.id}/content"
                      alt="${fn:escapeXml(viewerDoc.name)}"
-                     style="max-width:100%;max-height:85vh;border-radius:4px;cursor:grab;"
+                     class="${viewerZoomMode eq 'fitWidth' ? 'fit-width' : viewerZoomMode eq 'fitHeight' ? 'fit-height' : ''}"
+                     style="max-width:100%;max-height:85vh;border-radius:4px;cursor:grab;${viewerZoomMode eq 'fixed' && viewerZoom != 100 ? 'transform:scale('.concat(viewerZoom / 100).concat(');transform-origin:center center;') : ''}"
                      onload="onDocLoaded()">
             </c:otherwise>
         </c:choose>
     </div>
     
-    <!-- Navigation overlay arrows -->
-    <div class="nav-overlay prev" onclick="navDoc(-1)" id="navPrev" ${viewerIndex <= 0 ? 'style="display:none"' : ''}>
-        <i class="bi bi-chevron-left"></i>
-    </div>
-    <div class="nav-overlay next" onclick="navDoc(1)" id="navNext" ${viewerIndex >= fn:length(viewerDocs) - 1 ? 'style="display:none"' : ''}>
-        <i class="bi bi-chevron-right"></i>
-    </div>
+    <!-- Navigation overlay arrows (URL-based, works without JS) -->
+    <c:if test="${viewerIndex > 0}">
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDocs[viewerIndex - 1].id}?zoom=${viewerZoom}" class="nav-overlay prev">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+    </c:if>
+    <c:if test="${viewerIndex < fn:length(viewerDocs) - 1}">
+        <a href="${pageContext.request.contextPath}/viewer/${viewerDocs[viewerIndex + 1].id}?zoom=${viewerZoom}" class="nav-overlay next">
+            <i class="bi bi-chevron-right"></i>
+        </a>
+    </c:if>
 </div>
 
 <!-- ═══ Info bar ═══ -->
