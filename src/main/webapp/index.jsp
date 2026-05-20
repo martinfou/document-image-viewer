@@ -21,11 +21,11 @@
 
     <style>
         :root {
-            --doc-card-hover: rgba(13, 110, 253, 0.05);
+            --doc-card-hover: rgba(0, 135, 78, 0.05);
         }
 
         body {
-            background: #f5f7fb;
+            background: #f0f7f2;
             min-height: 100vh;
         }
 
@@ -36,7 +36,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 6px;
-            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            background: linear-gradient(135deg, #00874e, #6610f2);
             color: #fff;
             font-size: 1rem;
         }
@@ -76,7 +76,7 @@
             width: 2rem;
             height: 2rem;
             border-radius: 50%;
-            background: #0d6efd;
+            background: #00874e;
             animation: pulse 1.2s ease-in-out infinite;
         }
         @keyframes pulse {
@@ -103,6 +103,73 @@
             border-top: 1px solid #dee2e6;
             background: #fff;
         }
+
+        /* Desjardins official colors */
+        :root {
+            --desjardins-teal: #00874e;
+            --desjardins-dark: #004c2a;
+            --desjardins-light: #e8f5e9;
+            --desjardins-accent: #00a86b;
+        }
+        
+        .btn-desjardins {
+            --bs-btn-color: #fff;
+            --bs-btn-bg: #00874e;
+            --bs-btn-border-color: #00874e;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #006c3e;
+            --bs-btn-hover-border-color: #006c3e;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #004c2a;
+            --bs-btn-active-border-color: #004c2a;
+        }
+        
+        .bg-desjardins {
+            background-color: #00874e !important;
+        }
+        
+        .text-desjardins {
+            color: #00874e !important;
+        }
+        
+        .border-desjardins {
+            border-color: #00874e !important;
+        }
+        
+        .bg-desjardins-light {
+            background-color: #e8f5e9 !important;
+        }
+        
+        .doc-card:hover {
+            border-color: #00874e !important;
+            box-shadow: 0 8px 25px rgba(0, 135, 78, 0.15) !important;
+        }
+        
+        .navbar-brand-icon {
+            background: linear-gradient(135deg, #00874e, #004c2a) !important;
+        }
+        
+        .nav-link.active {
+            color: #00874e !important;
+            border-bottom-color: #00874e !important;
+        }
+        
+        .pulse-loader {
+            background: #00874e !important;
+        }
+        
+        footer {
+            border-top: 1px solid rgba(0, 135, 78, 0.15) !important;
+        }
+        
+        .stats-bar {
+            border-bottom: 1px solid rgba(0, 135, 78, 0.15) !important;
+        }
+        
+        ::selection {
+            background: rgba(0, 135, 78, 0.2);
+        }
+
     </style>
 </head>
 <body>
@@ -167,7 +234,7 @@
                 <i class="bi bi-inbox"></i>
                 <h4 class="mt-3">No documents available</h4>
                 <p class="text-muted">Check that the document data source is configured.</p>
-                <a href="${pageContext.request.contextPath}/documents" class="btn btn-primary">
+                <a href="${pageContext.request.contextPath}/documents" class="btn btn-desjardins">
                     <i class="bi bi-arrow-repeat me-1"></i>Try loading again
                 </a>
             </div>
@@ -252,7 +319,7 @@
                     <h5 class="modal-title fw-semibold text-truncate" id="viewerModalLabel">
                         Document Viewer
                     </h5>
-                    <span class="badge bg-primary bg-opacity-10 text-primary ms-auto" id="modalDocType">
+                    <span class="badge bg-desjardins bg-opacity-10 text-primary ms-auto" id="modalDocType">
                         PDF
                     </span>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
