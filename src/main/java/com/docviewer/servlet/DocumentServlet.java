@@ -30,7 +30,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
         "/documents",
         "/documents/*",
         "/api/documents",
-        "/api/documents/*"
+        "/api/documents/*",
+        "/viewer",
+        "/viewer/*"
 })
 public class DocumentServlet extends HttpServlet {
 
@@ -105,6 +107,30 @@ public class DocumentServlet extends HttpServlet {
         // Route: /api/documents (list)
         if (isApiCall) {
             serveDocumentList(req, resp);
+            return;
+        }
+
+        // Route: /viewer/{id} — embedded viewer page (not modal)
+        if (requestURI.contains("/viewer")) {
+            String viewerId = null;
+            if (pathInfo != null && pathInfo.length() > 1) {
+                viewerId = pathInfo.replaceAll("^/+|/+$", "");
+            } else {
+                viewerId = req.getParameter("doc");
+            }
+
+            if (viewerId != null && !viewerId.isEmpty()) {
+                Optional<Document> viewerDoc = getDocumentById(viewerId);
+                if (viewerDoc.isPresent()) {
+                    req.setAttribute("viewerDoc", viewerDoc.get());
+                    req.setAttribute("viewerDocs", getDocuments());
+                    req.setAttribute("viewerIndex", getDocumentIndex(viewerId));
+                    req.getRequestDispatcher("/viewer.jsp").forward(req, resp);
+                    return;
+                }
+            }
+            // Fallback: redirect to document list
+            resp.sendRedirect(req.getContextPath() + "/documents");
             return;
         }
 
@@ -209,6 +235,16 @@ public class DocumentServlet extends HttpServlet {
         return getDocuments().stream()
                 .filter(d -> d.getId() != null && d.getId().equals(id))
                 .findFirst();
+    }
+
+    private int getDocumentIndex(String id) {
+        List<Document> docs = getDocuments();
+        for (int i = 0; i < docs.size(); i++) {
+            if (docs.get(i).getId() != null && docs.get(i).getId().equals(id)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private static String escapeHtml(String input) {

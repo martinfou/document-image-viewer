@@ -246,8 +246,7 @@
                          data-doc-name="${fn:toLowerCase(doc.name)}"
                          data-doc-type="${fn:toLowerCase(doc.type)}">
                         <div class="card doc-card shadow-sm"
-                             data-bs-toggle="modal"
-                             data-bs-target="#viewerModal"
+                             onclick="location.href='${pageContext.request.contextPath}/viewer/${doc.id}'"
                              data-doc-id="${doc.id}"
                              data-doc-name="${fn:escapeXml(doc.name)}"
                              data-doc-description="${fn:escapeXml(doc.description)}"
