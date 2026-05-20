@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -147,24 +150,33 @@ public class DocumentServlet extends HttpServlet {
             Document d = doc.get();
             String type = d.getType() != null ? d.getType().toLowerCase() : "pdf";
 
-            switch (type) {
-                case "pdf" -> {
-                    resp.setContentType("application/pdf");
-                    resp.setHeader("Content-Disposition", "inline; filename=\"" + d.getName() + ".pdf\"");
-                    // In production, stream the real PDF. Here we redirect to a placeholder.
-                    resp.sendRedirect("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
+            // Map document ID to a local sample file
+            String sampleFile = mapDocIdToSampleFile(docId);
+            Path samplePath = Paths.get(getServletContext().getRealPath("/samples/"), sampleFile);
+
+            if (Files.exists(samplePath)) {
+                // Serve the local sample file directly
+                byte[] content = Files.readAllBytes(samplePath);
+                resp.setContentLength(content.length);
+                resp.setHeader("Content-Disposition", "inline; filename=\"" + d.getName() + "\"");
+
+                switch (type) {
+                    case "pdf" -> resp.setContentType("application/pdf");
+                    case "jpg", "jpeg" -> resp.setContentType("image/jpeg");
+                    case "png" -> resp.setContentType("image/png");
+                    case "gif" -> resp.setContentType("image/gif");
+                    case "tiff", "tif" -> resp.setContentType("image/tiff");
+                    default -> resp.setContentType("application/octet-stream");
                 }
-                case "image", "png", "jpg", "jpeg", "gif" -> {
-                    resp.setContentType("image/" + (type.equals("jpg") ? "jpeg" : type));
-                    // Redirect to placeholder image service
-                    resp.sendRedirect("https://via.placeholder.com/800x600.png?text="
-                            + d.getName().replace(" ", "+"));
-                }
-                default -> {
-                    resp.setContentType("text/html");
-                    resp.getWriter().write("<html><body><p>Document: "
-                            + escapeHtml(d.getName()) + "</p></body></html>");
-                }
+
+                resp.getOutputStream().write(content);
+                getServletContext().log("Served sample file: " + samplePath);
+            } else {
+                // Fallback: redirect to placeholder
+                getServletContext().log("Sample file not found: " + samplePath
+                        + " — redirecting to placeholder");
+                resp.sendRedirect("https://via.placeholder.com/800x600.png?text="
+                        + d.getName().replace(" ", "+"));
             }
         } else {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -172,6 +184,21 @@ public class DocumentServlet extends HttpServlet {
             resp.getWriter().write("<html><body><h1>404 - Document Not Found</h1>"
                     + "<p>Document ID: " + escapeHtml(docId) + "</p></body></html>");
         }
+    }
+
+    /**
+     * Maps document IDs to local sample file names.
+     */
+    private String mapDocIdToSampleFile(String docId) {
+        return switch (docId) {
+            case "doc-001" -> "sample.pdf";
+            case "doc-002" -> "blueprint.pdf";
+            case "doc-003" -> "photo.jpg";
+            case "doc-004" -> "sample.jpg";
+            case "doc-005" -> "scan.tiff";
+            case "doc-006" -> "document.tiff";
+            default -> "sample.pdf";
+        };
     }
 
     private List<Document> getDocuments() {

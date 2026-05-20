@@ -56,7 +56,7 @@ class DocumentViewerTagTest {
                     .isNotBlank();
             assertThat(doc.getType())
                     .as("Document %s must have a type", doc.getId())
-                    .isIn("pdf", "image");
+                    .isIn("pdf", "jpeg", "tiff");
             assertThat(doc.getUrl())
                     .as("Document %s must have a URL", doc.getId())
                     .isNotBlank();
@@ -73,8 +73,8 @@ class DocumentViewerTagTest {
                 .distinct()
                 .toList();
         assertThat(types)
-                .as("Document types should be only 'pdf' or 'image'")
-                .allMatch(t -> t.equals("pdf") || t.equals("image"));
+                .as("Document types should be one of: pdf, jpeg, tiff")
+                .allMatch(t -> t.equals("pdf") || t.equals("jpeg") || t.equals("tiff"));
     }
 
     @Test

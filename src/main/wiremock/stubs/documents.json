@@ -2,61 +2,61 @@
   {
     "id": "doc-001",
     "name": "Annual Report 2025",
-    "description": "Annual financial report with charts and summaries",
+    "description": "Annual financial report with charts and summaries — PDF sample",
     "type": "pdf",
     "url": "/api/documents/doc-001/content",
-    "thumbnailUrl": "https://via.placeholder.com/300x400.png?text=Annual+Report",
+    "thumbnailUrl": "/api/documents/doc-001/content",
     "sizeBytes": 2456789,
     "pageCount": 42
   },
   {
     "id": "doc-002",
-    "name": "Project Blueprint",
-    "description": "Technical architecture blueprint for the new platform",
+    "name": "Technical Blueprint",
+    "description": "Architecture blueprint for the new platform — PDF sample",
     "type": "pdf",
     "url": "/api/documents/doc-002/content",
-    "thumbnailUrl": "https://via.placeholder.com/300x400.png?text=Blueprint",
+    "thumbnailUrl": "/api/documents/doc-002/content",
     "sizeBytes": 1245678,
     "pageCount": 28
   },
   {
     "id": "doc-003",
     "name": "Team Photo",
-    "description": "Group photo from the quarterly team building event",
-    "type": "image",
+    "description": "Group photo from team building event — JPEG image",
+    "type": "jpeg",
     "url": "/api/documents/doc-003/content",
-    "thumbnailUrl": "https://via.placeholder.com/300x400.png?text=Team+Photo",
+    "thumbnailUrl": "/api/documents/doc-003/content",
     "sizeBytes": 456789,
     "pageCount": 1
   },
   {
     "id": "doc-004",
-    "name": "Product Roadmap",
-    "description": "Q3-Q4 product roadmap with milestone timelines",
-    "type": "pdf",
+    "name": "Product Shot",
+    "description": "Product photography sample — JPEG image",
+    "type": "jpeg",
     "url": "/api/documents/doc-004/content",
-    "thumbnailUrl": "https://via.placeholder.com/300x400.png?text=Roadmap",
-    "sizeBytes": 890123,
-    "pageCount": 15
-  },
-  {
-    "id": "doc-005",
-    "name": "Infographic",
-    "description": "Visual summary of key metrics and KPIs",
-    "type": "image",
-    "url": "/api/documents/doc-005/content",
-    "thumbnailUrl": "https://via.placeholder.com/300x400.png?text=Infographic",
+    "thumbnailUrl": "/api/documents/doc-004/content",
     "sizeBytes": 234567,
     "pageCount": 1
   },
   {
+    "id": "doc-005",
+    "name": "Scanned Contract",
+    "description": "Legal document scanned at 300 DPI — TIFF image",
+    "type": "tiff",
+    "url": "/api/documents/doc-005/content",
+    "thumbnailUrl": "/api/documents/doc-005/content",
+    "sizeBytes": 5678901,
+    "pageCount": 10
+  },
+  {
     "id": "doc-006",
-    "name": "Contract Template",
-    "description": "Standard service agreement template v3.2",
-    "type": "pdf",
+    "name": "Signed Agreement",
+    "description": "Signed partnership agreement — TIFF image",
+    "type": "tiff",
     "url": "/api/documents/doc-006/content",
-    "thumbnailUrl": "https://via.placeholder.com/300x400.png?text=Contract",
-    "sizeBytes": 345678,
-    "pageCount": 12
+    "thumbnailUrl": "/api/documents/doc-006/content",
+    "sizeBytes": 3456789,
+    "pageCount": 5
   }
 ]
