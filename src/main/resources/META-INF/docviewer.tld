@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+        https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_4_0.xsd"
+        version="4.0">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>docviewer</short-name>
+    <uri>https://docviewer.example.com/tags</uri>
+    <description>Document Image Viewer custom tag library</description>
+
+    <tag>
+        <name>documentViewer</name>
+        <tag-class>com.docviewer.taglib.DocumentViewerTag</tag-class>
+        <body-content>scriptless</body-content>
+        <description>
+            Renders a document viewer with an iframe and zoom controls.
+            Usage: &lt;doc:documentViewer documentId="..." height="600px" width="100%" zoom="1.0"&gt;fallback&lt;/doc:documentViewer&gt;
+        </description>
+
+        <attribute>
+            <name>documentId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>The unique document identifier</description>
+        </attribute>
+
+        <attribute>
+            <name>height</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Viewer height (e.g., 600px, 100vh)</description>
+        </attribute>
+
+        <attribute>
+            <name>width</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Viewer width (e.g., 100%, 800px)</description>
+        </attribute>
+
+        <attribute>
+            <name>zoom</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Initial zoom level (default: 1.0)</description>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>imageViewer</name>
+        <tag-class>com.docviewer.taglib.ImageViewerTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            Renders an image with optional inline zoom support.
+            Usage: &lt;doc:imageViewer src="..." alt="..." zoomable="true" maxWidth="800px"/&gt;
+        </description>
+
+        <attribute>
+            <name>src</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Image source URL</description>
+        </attribute>
+
+        <attribute>
+            <name>alt</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Alt text for the image</description>
+        </attribute>
+
+        <attribute>
+            <name>zoomable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Enable click-to-zoom (true/false, default: true)</description>
+        </attribute>
+
+        <attribute>
+            <name>maxWidth</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Maximum container width (e.g., 800px, 100%)</description>
+        </attribute>
+    </tag>
+
+</taglib>

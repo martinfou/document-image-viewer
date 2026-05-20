@@ -1,0 +1,4 @@
+/home/martinfou/projects/document-image-viewer/src/main/java/com/docviewer/model/Document.java
+/home/martinfou/projects/document-image-viewer/src/main/java/com/docviewer/servlet/DocumentServlet.java
+/home/martinfou/projects/document-image-viewer/src/main/java/com/docviewer/taglib/DocumentViewerTag.java
+/home/martinfou/projects/document-image-viewer/src/main/java/com/docviewer/taglib/ImageViewerTag.java
