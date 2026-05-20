@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Image Viewer — Screenshot</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root { --desjardins-teal: #00874e; --desjardins-dark: #004c2a; --desjardins-light: #e8f5e9; }
+body { background: #f0f7f2; font-family: system-ui, -apple-system, sans-serif; }
+.navbar-brand-icon {
+    width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 6px; background: linear-gradient(135deg, #00874e, #004c2a); color: #fff; font-size: 1rem;
+}
+.doc-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: 1px solid rgba(0,0,0,0.08); height: 100%; background: #fff; border-radius: 8px; overflow: hidden; }
+.doc-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,135,78,0.15); border-color: #00874e; }
+.doc-thumb { height: 180px; object-fit: cover; background: #e8f5e9; }
+.doc-type-badge { position: absolute; top: 8px; right: 8px; font-size: 0.7rem; text-transform: uppercase; }
+.bg-desjardins { background-color: #00874e !important; }
+.btn-desjardins { background: #00874e; border-color: #00874e; color: #fff; }
+.btn-desjardins:hover { background: #006c3e; color: #fff; }
+.stats-bar { background: #fff; border-bottom: 1px solid rgba(0,135,78,0.15); }
+.card-img-top.doc-thumb { border-radius: 8px 8px 0 0; }
+.viewer-container { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; }
+.nav-arrow { cursor: pointer; color: #00874e; }
+.nav-arrow:hover { color: #004c2a; }
+footer { border-top: 1px solid rgba(0,135,78,0.15); background: #fff; }
+.badge-pdf { background: #00874e; }
+.badge-jpeg { background: #00a86b; }
+.badge-tiff { background: #004c2a; }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" href="#">
+            <span class="navbar-brand-icon"><i class="bi bi-file-earmark-text"></i></span>
+            Document Viewer
+        </a>
+        <div class="d-flex ms-auto">
+            <div class="input-group input-group-sm me-2" style="width:250px">
+                <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="search" class="form-control border-start-0" placeholder="Search documents...">
+            </div>
+            <button class="btn btn-sm btn-desjardins"><i class="bi bi-arrow-clockwise"></i></button>
+        </div>
+    </div>
+</nav>
+
+<!-- Stats -->
+<div class="stats-bar py-2">
+    <div class="container d-flex justify-content-between small text-muted">
+        <span><i class="bi bi-files me-1"></i> <strong>6</strong> document(s)</span>
+        <span><i class="bi bi-info-circle me-1"></i> Click any card to open the viewer</span>
+    </div>
+</div>
+
+<!-- Grid -->
+<main class="container py-4">
+    <div class="row g-4">
+        <!-- PDF 1 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="doc-card shadow-sm" onclick="openViewer(0)">
+                <div class="position-relative overflow-hidden">
+                    <div class="doc-thumb d-flex align-items-center justify-content-center" style="background:#e8f5e9;">
+                        <i class="bi bi-filetype-pdf" style="font-size:3rem;color:#00874e;opacity:0.5;"></i>
+                    </div>
+                    <span class="badge badge-pdf doc-type-badge"><i class="bi bi-filetype-pdf me-1"></i>PDF</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">Annual Report 2025</h6>
+                    <p class="card-text small text-muted text-truncate">Financial report with charts and summaries</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <small class="text-muted"><i class="bi bi-file-earmark me-1"></i>2.3 MB · 42 p.</small>
+                </div>
+            </div>
+        </div>
+        <!-- PDF 2 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="doc-card shadow-sm" onclick="openViewer(1)">
+                <div class="position-relative overflow-hidden">
+                    <div class="doc-thumb d-flex align-items-center justify-content-center" style="background:#e8f5e9;">
+                        <i class="bi bi-filetype-pdf" style="font-size:3rem;color:#00874e;opacity:0.5;"></i>
+                    </div>
+                    <span class="badge badge-pdf doc-type-badge"><i class="bi bi-filetype-pdf me-1"></i>PDF</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">Technical Blueprint</h6>
+                    <p class="card-text small text-muted text-truncate">Architecture diagram for new platform</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <small class="text-muted"><i class="bi bi-file-earmark me-1"></i>1.2 MB · 28 p.</small>
+                </div>
+            </div>
+        </div>
+        <!-- JPEG 1 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="doc-card shadow-sm" onclick="openViewer(2)">
+                <div class="position-relative overflow-hidden">
+                    <div class="doc-thumb d-flex align-items-center justify-content-center" style="background:#e8f5e9;">
+                        <i class="bi bi-image" style="font-size:3rem;color:#00a86b;opacity:0.5;"></i>
+                    </div>
+                    <span class="badge badge-jpeg doc-type-badge"><i class="bi bi-image me-1"></i>JPEG</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">Team Photo</h6>
+                    <p class="card-text small text-muted text-truncate">Group photo from team building event</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <small class="text-muted"><i class="bi bi-file-earmark me-1"></i>456 KB · 1 p.</small>
+                </div>
+            </div>
+        </div>
+        <!-- JPEG 2 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="doc-card shadow-sm" onclick="openViewer(3)">
+                <div class="position-relative overflow-hidden">
+                    <div class="doc-thumb d-flex align-items-center justify-content-center" style="background:#e8f5e9;">
+                        <i class="bi bi-image" style="font-size:3rem;color:#00a86b;opacity:0.5;"></i>
+                    </div>
+                    <span class="badge badge-jpeg doc-type-badge"><i class="bi bi-image me-1"></i>JPEG</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">Product Shot</h6>
+                    <p class="card-text small text-muted text-truncate">Product photography sample</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <small class="text-muted"><i class="bi bi-file-earmark me-1"></i>234 KB · 1 p.</small>
+                </div>
+            </div>
+        </div>
+        <!-- TIFF 1 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="doc-card shadow-sm" onclick="openViewer(4)">
+                <div class="position-relative overflow-hidden">
+                    <div class="doc-thumb d-flex align-items-center justify-content-center" style="background:#e8f5e9;">
+                        <i class="bi bi-file-earmark" style="font-size:3rem;color:#004c2a;opacity:0.5;"></i>
+                    </div>
+                    <span class="badge badge-tiff doc-type-badge"><i class="bi bi-file-earmark me-1"></i>TIFF</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">Scanned Contract</h6>
+                    <p class="card-text small text-muted text-truncate">Legal document scanned at 300 DPI</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <small class="text-muted"><i class="bi bi-file-earmark me-1"></i>5.4 MB · 10 p.</small>
+                </div>
+            </div>
+        </div>
+        <!-- TIFF 2 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="doc-card shadow-sm" onclick="openViewer(5)">
+                <div class="position-relative overflow-hidden">
+                    <div class="doc-thumb d-flex align-items-center justify-content-center" style="background:#e8f5e9;">
+                        <i class="bi bi-file-earmark" style="font-size:3rem;color:#004c2a;opacity:0.5;"></i>
+                    </div>
+                    <span class="badge badge-tiff doc-type-badge"><i class="bi bi-file-earmark me-1"></i>TIFF</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title text-truncate">Signed Agreement</h6>
+                    <p class="card-text small text-muted text-truncate">Signed partnership agreement</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <small class="text-muted"><i class="bi bi-file-earmark me-1"></i>3.3 MB · 5 p.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Viewer -->
+<div class="modal fade" id="viewerModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <div class="d-flex align-items-center gap-3 w-100">
+          <h5 class="modal-title fw-semibold text-truncate" id="modalTitle">Document Viewer</h5>
+          <span class="badge bg-desjardins ms-auto" id="modalType">PDF</span>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="viewer-container p-4 text-center" id="viewerContent">
+          <div style="background:#f8f9fa;border-radius:8px;padding:3rem;">
+            <i class="bi bi-file-earmark-text" style="font-size:4rem;color:#00874e;opacity:0.3;"></i>
+            <p class="text-muted mt-3 mb-0">Document preview area</p>
+            <p class="small text-muted">PDF · JPEG · TIFF supported</p>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <span class="nav-arrow" onclick="navigate(-1)"><i class="bi bi-chevron-left fs-4"></i> Previous</span>
+          <span class="small text-muted" id="docCounter">1 / 6</span>
+          <span class="nav-arrow" onclick="navigate(1)">Next <i class="bi bi-chevron-right fs-4"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="py-3 text-center small text-muted">
+    <i class="bi bi-file-earmark-text me-1"></i>
+    Document Image Viewer · JSP + Custom Tags · Bootstrap 5 &middot;
+    Couleurs Desjardins &trade;
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const docs = [
+    {name:'Annual Report 2025', type:'PDF'},
+    {name:'Technical Blueprint', type:'PDF'},
+    {name:'Team Photo', type:'JPEG'},
+    {name:'Product Shot', type:'JPEG'},
+    {name:'Scanned Contract', type:'TIFF'},
+    {name:'Signed Agreement', type:'TIFF'}
+];
+let currentIdx = 0;
+function openViewer(i) {
+    currentIdx = i;
+    showDoc(i);
+    new bootstrap.Modal(document.getElementById('viewerModal')).show();
+}
+function showDoc(i) {
+    const d = docs[i];
+    document.getElementById('modalTitle').textContent = d.name;
+    document.getElementById('modalType').textContent = d.type;
+    document.getElementById('docCounter').textContent = (i+1) + ' / ' + docs.length;
+}
+function navigate(dir) {
+    currentIdx = (currentIdx + dir + docs.length) % docs.length;
+    showDoc(currentIdx);
+}
+</script>
+</body>
+</html>
