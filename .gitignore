@@ -27,3 +27,4 @@ logs/
 # Env
 .env
 .env.*
+AGENTS.md
